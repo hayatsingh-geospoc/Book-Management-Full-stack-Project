@@ -25,8 +25,8 @@ export const userModel = mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: [8, 'Password should have a minimum length of 8 characters'],
-      maxlength: [20, 'Password should have a maximum length of 20 characters'],
+      minlen: 8,
+      maxlen: 20,
     },
     address: {
       street: { type: String, required: true },

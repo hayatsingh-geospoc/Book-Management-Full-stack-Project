@@ -1,5 +1,7 @@
 import Users from '../models/model.js';
 import { isValid, isValidTitle } from '../validations/validations.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
   try {
@@ -55,6 +57,8 @@ export const createUser = async (req, res) => {
       });
     }
 
+    data.password = bcrypt.hashSync(password, 7);
+
     const reqAddress = isValid(address);
     if (!reqAddress) {
       return res
@@ -96,4 +100,32 @@ export const createUser = async (req, res) => {
   }
 };
 
-export default createUser;
+export const userLogin = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!email) {
+    return res.status(400).send({ status: false, msg: ' email is required' });
+  }
+
+  if (!password) {
+    return res
+      .status(400)
+      .send({ status: false, msg: ' password is required' });
+  }
+
+  const data = await Users.findOne({ email: email, password: password });
+
+  const token = jwt.sign(
+    {
+      userId: data._id,
+      batch: 'Book-Management',
+      organisation: 'Demon-CORP',
+    },
+    'decode',
+    { expiresIn: '1hr' }
+  );
+  console.log(token);
+  return res.status(201).send({ status: true, message: token });
+};
+export default { createUser, userLogin };

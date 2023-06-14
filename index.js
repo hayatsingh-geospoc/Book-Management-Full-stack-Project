@@ -12,6 +12,7 @@ mongoose
     'mongodb+srv://amit_singh:kya_hal_hai_tere@cluster0.jpqo2bq.mongodb.net/HAYAT_NEW_DB',
     {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     }
   )
   .then(() => {
